@@ -1,0 +1,64 @@
+CREATE DATABASE JDBC;
+
+CREATE TABLE aluno
+(
+    idaluno SERIAL,
+    dt_nasc DATE NOT NULL,
+    nome VARCHAR(80) NOT NULL,
+    sexo VARCHAR(30) NOT NULL,
+    CONSTRAINT aluno_pkey PRIMARY KEY (idaluno)
+);
+
+INSERT INTO aluno(idaluno, dt_nasc, nome, sexo)
+	  VALUES (1, '2010/1/03', 'Maria', 'Feminino'),
+		 (2, '2020/10/30', 'João', 'Masculino'),
+		 (3, '1998/12/08', 'Pedro', 'Masculino'),
+		 (4, '2005/6/01', 'José', 'Masculino'),
+		 (5, '1976/8/12', 'Ana', 'Feminino'),
+		 (6, '1995/11/21', 'Carol', 'Feminino');
+
+CREATE TABLE curso
+(
+    idcurso SERIAL,
+    nomecurso VARCHAR(100) NOT NULL,
+    CONSTRAINT curso_pkey PRIMARY KEY (idcurso)
+);
+
+INSERT INTO curso(idcurso, nomecurso)
+	  VALUES (1, 'Banco de Dados'),
+		 (2, 'Estrutura de Dados'),
+		 (3, 'Programação Web'),
+                 (4, 'Programação Orientada a Objetos');
+
+CREATE TABLE public.aluno_curso
+(
+    idcurso integer NOT NULL,
+    idaluno integer NOT NULL,
+    CONSTRAINT aluno_fkey FOREIGN KEY (idaluno)
+        REFERENCES aluno (idaluno)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT curso_fkey FOREIGN KEY (idcurso)
+        REFERENCES curso (idcurso)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+
+INSERT INTO aluno_curso(idcurso, idaluno)
+	        VALUES 	(1, 1),
+			(1, 2),
+			(2, 3),
+			(2, 4),
+			(3, 5),
+			(3, 6),
+			(4, 1),
+			(4, 2);
+
+CREATE TABLE public.disciplina
+(
+    iddisciplina SERIAL,
+    nomedisciplina VARCHAR(60) NOT NULL,
+    cargahoraria integer NOT NULL,
+    CONSTRAINT disciplina_pkey PRIMARY KEY (iddisciplina)
+)
