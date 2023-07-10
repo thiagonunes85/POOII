@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Jogo de Adivinhar o resultado da partida</title>
+      <style> 
+        body { background-color: #5aa4d8; }
+        #resultado-palpite.yellow{
+          background-color: rgb(255, 174, 0);
+        }
+        #resultado-final.azulmarinho{
+          background-color: #00c6f8
+        }
+      </style>
+  </head>
+  <body>
+    <h1>Jogo de Adivinhar o Resultado da Partida</h1>
+    <p>Você tem até 10 tentativas.</p>
+    <p>Resultado entre 0x0 e 10x10</p>
+    <form>
+      <label for="palpite-brasil">Brasil:</label>
+      <input type="number" id="palpite-brasil" name="palpite-brasil"><br>
+      <label for="palpite-alemanha">Alemanha:</label>
+      <input type="number" id="palpite-alemanha" name="palpite-alemanha"><br>
+      <button type="button" id="enviar-palpite">Verificar</button>
+      <button type="button" id="reiniciar-jogo">Reiniciar</button>
+    </form>
+    <br>
+    <div id="resultado-palpite"></div>
+    <p>Palpites Anteriores: <ul id="palpites-anteriores"></ul> </p>
+    <p>Brasil: <span id="resultado-brasil"></span></p>
+    <p>Alemanha: <span id="resultado-alemanha"></span></p>
+    <p id="resultado-final"></p>
+    <script>
+      var golsBrasil, golsAlemanha, tentativas;
+      
+      function gerarGols() {
+        golsBrasil = Math.floor(Math.random() * 6);
+        golsAlemanha = Math.floor(Math.random() * 6);
+        tentativas = 0;
+      }
+      
+      function atualizarJogo(palpiteBrasil, palpiteAlemanha) {
+              if (palpiteBrasil === golsBrasil && palpiteAlemanha === golsAlemanha) {
+          document.getElementById("resultado-final").innerHTML = "Você acertou, parabéns!";
+          document.getElementById("resultado-final").classList.add("azulmarinho");
+          desabilitarFormulario();
+        } else {
+          if (tentativas >= 10) {
+            document.getElementById("resultado-final").innerHTML = "Fim de jogo! O placar correto era Brasil " + golsBrasil + " x " + golsAlemanha + " Alemanha.";
+            desabilitarFormulario();
+          } else {
+            var dicaBrasil = "";
+            var dicaAlemanha = "";
+            if (palpiteBrasil > golsBrasil) {
+              dicaBrasil = "fez menos gols";
+            } else if (palpiteBrasil < golsBrasil) {
+              dicaBrasil = "fez mais gols";
+            }
+            if (palpiteAlemanha > golsAlemanha) {
+              dicaAlemanha = "fez menos gols";
+            } else if (palpiteAlemanha < golsAlemanha) {
+              dicaAlemanha = "fez mais gols";
+            }
+            if (palpiteAlemanha === golsAlemanha) {
+              dicaAlemanha = "palpite correto";
+            }
+            if (palpiteBrasil === golsBrasil) {
+              dicaAlemanha = "palpite correto";
+            }
+            
+            document.getElementById("resultado-brasil").innerHTML = dicaBrasil;
+            document.getElementById("resultado-alemanha").innerHTML = dicaAlemanha;
+
+      if (palpiteBrasil !== golsBrasil || palpiteAlemanha !== golsAlemanha) {
+        document.getElementById("resultado-palpite").innerHTML = "Errado!";
+        document.getElementById("resultado-palpite").classList.add("yellow");
+      } else {
+        document.getElementById("resultado-palpite").innerHTML = "";
+      }
+
+        var palpiteAtual = "||" + palpiteBrasil + " x " + palpiteAlemanha + "|| ";
+        var palpitesAnteriores = document.getElementById("palpites-anteriores");
+        var novoItem = document.createElement("label");
+        novoItem.appendChild(document.createTextNode(palpiteAtual));
+        palpitesAnteriores.appendChild(novoItem);
+        
+        tentativas++;
+      }
+    }
+  }
+  
+  function desabilitarFormulario() {
+    document.getElementById("enviar-palpite").disabled = true;
+    document.getElementById("palpite-brasil").disabled = true;
+    document.getElementById("palpite-alemanha").disabled = true;
+  }
+  
+  function habilitarFormulario() {
+    document.getElementById("enviar-palpite").disabled = false;
+    document.getElementById("palpite-brasil").disabled = false;
+    document.getElementById("palpite-alemanha").disabled = false;
+    document.getElementById("resultado-final").innerHTML = "";
+    document.getElementById("resultado-brasil").innerHTML = "";
+    document.getElementById("resultado-alemanha").innerHTML = "";
+    document.getElementById("palpites-anteriores").innerHTML = "";
+  }
+  
+  gerarGols();
+  habilitarFormulario();
+  
+  document.getElementById("enviar-palpite").addEventListener("click", function() {
+    var palpiteBrasil = parseInt(document.getElementById("palpite-brasil").value);
+    var palpiteAlemanha = parseInt(document.getElementById("palpite-alemanha").value);
+    
+    if (isNaN(palpiteBrasil) || isNaN(palpiteAlemanha)) {
+      alert("Por favor, insira valores numéricos válidos.");
+    } else {
+      atualizarJogo(palpiteBrasil, palpiteAlemanha);
+    }
+  });
+  
+  document.getElementById("reiniciar-jogo").addEventListener("click", function() {
+    gerarGols();
+    habilitarFormulario();
+  });
+</script>
+
+</body>
+
+</html>
